@@ -13,9 +13,7 @@
 <body class="bg-gray-50">
 
 <div id="app" class="max-w-7xl mx-auto p-4">
-
   <div class="text-right text-sm text-gray-500 mb-2">数据更新时间：{{ latestUpdateYear }}</div>
-
   <h1 class="text-3xl font-bold mb-2">Global Environmental Agencies</h1>
   <p class="text-gray-600 mb-6">当前显示 {{ filteredCountries.length }} / {{ countries.length }} 个国家和地区</p>
 
@@ -34,16 +32,10 @@
     <table class="min-w-full text-left">
       <thead class="bg-gray-100">
         <tr>
-          <th class="p-3 cursor-pointer" @click="sortBy('country_en')">
-            国家 / 地区
-            <span v-if="sortKey === 'country_en'">{{ sortAsc ? '↑' : '↓' }}</span>
-          </th>
+          <th class="p-3 cursor-pointer" @click="sortBy('country_en')">国家 / 地区 <span v-if="sortKey==='country_en'">{{ sortAsc ? '↑' : '↓' }}</span></th>
           <th class="p-3">环保部门</th>
           <th class="p-3">官网访问</th>
-          <th class="p-3 cursor-pointer" @click="sortBy('pm25')">
-            PM2.5 (μg/m³)
-            <span v-if="sortKey === 'pm25'">{{ sortAsc ? '↑' : '↓' }}</span>
-          </th>
+          <th class="p-3 cursor-pointer" @click="sortBy('pm25')">PM2.5 (μg/m³) <span v-if="sortKey==='pm25'">{{ sortAsc ? '↑' : '↓' }}</span></th>
           <th class="p-3">年份</th>
         </tr>
       </thead>
@@ -70,10 +62,8 @@
       </tbody>
     </table>
   </div>
-
 </div>
 
-<!-- 以下脚本保持不变 -->
 <script>
 const { createApp } = Vue;
 
@@ -98,16 +88,15 @@ createApp({
     filteredCountries() {
       const keyword = this.search.toLowerCase().trim();
       let result = this.countries.filter(item => {
-        const fields = [item.country_en, item.country_cn, item.agency_en, item.agency_cn];
-        return fields.some(field => field && field.toLowerCase().includes(keyword));
+        return [item.country_en, item.country_cn, item.agency_en, item.agency_cn]
+          .some(field => field && field.toLowerCase().includes(keyword));
       });
-      if (this.regionFilter) {
-        result = result.filter(item => item.region === this.regionFilter);
-      }
+      if (this.regionFilter) result = result.filter(item => item.region === this.regionFilter);
       if (this.sortKey) {
         result = result.sort((a, b) => {
-          if (this.sortAsc) return (a[this.sortKey] || 0) > (b[this.sortKey] || 0) ? 1 : -1;
-          else return (a[this.sortKey] || 0) < (b[this.sortKey] || 0) ? 1 : -1;
+          const aValue = a[this.sortKey] || 0;
+          const bValue = b[this.sortKey] || 0;
+          return this.sortAsc ? (aValue > bValue ? 1 : -1) : (aValue < bValue ? 1 : -1);
         });
       }
       return result;
@@ -122,12 +111,8 @@ createApp({
   },
   methods: {
     sortBy(key) {
-      if (this.sortKey === key) {
-        this.sortAsc = !this.sortAsc;
-      } else {
-        this.sortKey = key;
-        this.sortAsc = true;
-      }
+      this.sortAsc = this.sortKey === key ? !this.sortAsc : true;
+      this.sortKey = key;
     },
     selectCountry(item) {
       this.selected = item;
@@ -138,24 +123,15 @@ createApp({
       this.currentPage = 1;
     },
     goToPage() {
-      if (this.jumpPage >= 1 && this.jumpPage <= this.totalPages) {
-        this.currentPage = this.jumpPage;
-      }
+      const page = Number(this.jumpPage);
+      if (page >= 1 && page <= this.totalPages) this.currentPage = page;
     },
     initMap() {
       const chart = echarts.init(document.getElementById('world-map'));
-      const countryLinkMap = {};
-      this.countries.forEach(item => {
-        countryLinkMap[item.country_en.toLowerCase()] = item.website;
-        countryLinkMap[item.country_cn] = item.website;
-      });
+      const countryLinkMap = Object.fromEntries(this.countries.map(item => [item.country_en.toLowerCase(), item.website]));
+      const mapData = this.countries.map(item => ({ name: item.country_en, value: item.pm25 ?? 0 }));
 
-      const mapData = this.countries.map(item => ({
-        name: item.country_en,
-        value: item.pm25 !== null ? item.pm25 : 0
-      }));
-
-      const option = {
+      chart.setOption({
         tooltip: { trigger: 'item', formatter: '{b}<br/>PM2.5: {c} μg/m³' },
         visualMap: {
           min: 0,
@@ -166,83 +142,52 @@ createApp({
           orient: 'horizontal',
           left: 'center',
           bottom: 20,
-          inRange: {
-            color: ['#e0f3db', '#a8ddb5', '#43a2ca', '#0868ac', '#084081']
-          }
-        }
+          inRange: { color: ['#e0f3db', '#a8ddb5', '#43a2ca', '#0868ac', '#084081'] }
         },
         series: [{
+          type: 'map',
+          roam: true,
+          map: 'world',
           animation: true,
           animationDuration: 1500,
           animationEasing: 'cubicOut',
-          type: 'map',
-          roam: true, // 支持鼠标缩放和拖拽
-          map: 'world',
-          roam: true,
           data: mapData,
           label: { show: true, fontSize: 9, color: '#333' },
           itemStyle: { areaColor: '#e0e0e0', borderColor: '#666', borderWidth: 1 },
           emphasis: {
             label: { show: true },
-            itemStyle: {
-              areaColor: '#66bb6a',
-              shadowBlur: 20,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-              borderColor: '#66bb6a',
-              borderWidth: 2
-            }
+            itemStyle: { areaColor: '#66bb6a', shadowBlur: 20, shadowColor: 'rgba(0,0,0,0.5)', borderColor: '#66bb6a', borderWidth: 2 }
           }
         }]
-      };
+      });
 
-      chart.setOption(option);
-
-chart.on('click', params => {
-  const name = params.name.toLowerCase();
-  const link = countryLinkMap[name] || countryLinkMap[params.name];
-
-  // 读取当前缩放比例
-  const seriesOption = chart.getOption().series[0];
-  const currentZoom = seriesOption.zoom || 1;
-
-  // 平滑放大并微调位置
-  chart.dispatchAction({
-    type: 'geoRoam',
-    zoom: currentZoom * 1.8, // 在当前基础上放大1.8倍
-    moveX: 20,  // 适度右移
-    moveY: 20   // 适度下移
-  });
-
-  // 延迟0.8秒后打开官网
-  if (link) {
-    setTimeout(() => { window.open(link, '_blank'); }, 800);
-  }
-});
-
-
+      chart.on('click', params => {
+        const link = countryLinkMap[params.name.toLowerCase()];
+        if (link) {
+          const seriesOption = chart.getOption().series[0];
+          const currentZoom = seriesOption.zoom || 1;
+          chart.dispatchAction({ type: 'geoRoam', zoom: currentZoom * 1.8, moveX: 20, moveY: 20 });
+          setTimeout(() => { window.open(link, '_blank'); }, 800);
+        }
+      });
 
       window.addEventListener('resize', () => { chart.resize(); });
     }
   },
   mounted() {
-    axios.all([
+    Promise.all([
       axios.get('global_environmental_agencies_final_with_language.json'),
       axios.get('who_pm25_latest_with_year.json')
-    ]).then(axios.spread((agencyRes, pm25Res) => {
+    ]).then(([agencyRes, pm25Res]) => {
+      const pm25Map = Object.fromEntries(pm25Res.data.map(pm => [pm.country_en.toLowerCase(), pm]));
       this.countries = agencyRes.data.map(item => {
-        const pm25Data = pm25Res.data.find(pm => pm.country_en.toLowerCase() === item.country_en.toLowerCase());
-        return {
-          ...item,
-          pm25: pm25Data ? pm25Data.pm25 : null,
-          pm25_year: pm25Data ? pm25Data.year : null
-        };
+        const pm25Data = pm25Map[item.country_en.toLowerCase()];
+        return { ...item, pm25: pm25Data?.pm25 ?? null, pm25_year: pm25Data?.year ?? null };
       });
       this.regions = [...new Set(this.countries.map(item => item.region))];
-      if (pm25Res.data && pm25Res.data.length > 0) {
-        this.latestUpdateYear = Math.max(...pm25Res.data.map(p => p.year || 0)) + '年';
-      }
-      this.initMap();
-    }));
+      if (pm25Res.data.length > 0) this.latestUpdateYear = Math.max(...pm25Res.data.map(p => p.year || 0)) + '年';
+      this.$nextTick(() => { this.initMap(); });
+    });
   }
 }).mount('#app');
 </script>
