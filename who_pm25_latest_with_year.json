@@ -1,0 +1,532 @@
+[
+  {
+    "country_en": "Afghanistan",
+    "pm25": 119.77,
+    "year": 2019
+  },
+  {
+    "country_en": "Albania",
+    "pm25": 10.32,
+    "year": 2019
+  },
+  {
+    "country_en": "Algeria",
+    "pm25": 21.53,
+    "year": 2019
+  },
+  {
+    "country_en": "Argentina",
+    "pm25": 10.26,
+    "year": 2015
+  },
+  {
+    "country_en": "Australia",
+    "pm25": 6.14,
+    "year": 2019
+  },
+  {
+    "country_en": "Austria",
+    "pm25": 12.48,
+    "year": 2019
+  },
+  {
+    "country_en": "Bahamas",
+    "pm25": 3.2,
+    "year": 2020
+  },
+  {
+    "country_en": "Bahrain",
+    "pm25": 36.72,
+    "year": 2019
+  },
+  {
+    "country_en": "Bangladesh",
+    "pm25": 86.48,
+    "year": 2019
+  },
+  {
+    "country_en": "Belgium",
+    "pm25": 11.71,
+    "year": 2019
+  },
+  {
+    "country_en": "Bosnia and Herzegovina",
+    "pm25": 32.54,
+    "year": 2019
+  },
+  {
+    "country_en": "Brazil",
+    "pm25": 15.21,
+    "year": 2019
+  },
+  {
+    "country_en": "Bulgaria",
+    "pm25": 19.04,
+    "year": 2019
+  },
+  {
+    "country_en": "Cameroon",
+    "pm25": 67.0,
+    "year": 2012
+  },
+  {
+    "country_en": "Canada",
+    "pm25": 7.0,
+    "year": 2019
+  },
+  {
+    "country_en": "Chile",
+    "pm25": 12.0,
+    "year": 2019
+  },
+  {
+    "country_en": "China",
+    "pm25": 18.47,
+    "year": 2019
+  },
+  {
+    "country_en": "Colombia",
+    "pm25": 10.49,
+    "year": 2019
+  },
+  {
+    "country_en": "Costa Rica",
+    "pm25": 7.4,
+    "year": 2019
+  },
+  {
+    "country_en": "Croatia",
+    "pm25": 12.18,
+    "year": 2019
+  },
+  {
+    "country_en": "Cuba",
+    "pm25": 34.8,
+    "year": 2015
+  },
+  {
+    "country_en": "Cyprus",
+    "pm25": 9.89,
+    "year": 2019
+  },
+  {
+    "country_en": "Czechia",
+    "pm25": 17.68,
+    "year": 2019
+  },
+  {
+    "country_en": "Denmark",
+    "pm25": 9.56,
+    "year": 2019
+  },
+  {
+    "country_en": "Ecuador",
+    "pm25": 19.84,
+    "year": 2018
+  },
+  {
+    "country_en": "El Salvador",
+    "pm25": 29.0,
+    "year": 2018
+  },
+  {
+    "country_en": "Estonia",
+    "pm25": 4.01,
+    "year": 2019
+  },
+  {
+    "country_en": "Ethiopia",
+    "pm25": 20.48,
+    "year": 2019
+  },
+  {
+    "country_en": "Fiji",
+    "pm25": 8.1,
+    "year": 2015
+  },
+  {
+    "country_en": "Finland",
+    "pm25": 6.14,
+    "year": 2019
+  },
+  {
+    "country_en": "France",
+    "pm25": 10.51,
+    "year": 2019
+  },
+  {
+    "country_en": "Georgia",
+    "pm25": 20.0,
+    "year": 2017
+  },
+  {
+    "country_en": "Germany",
+    "pm25": 9.91,
+    "year": 2019
+  },
+  {
+    "country_en": "Ghana",
+    "pm25": 55.0,
+    "year": 2016
+  },
+  {
+    "country_en": "Greece",
+    "pm25": 19.31,
+    "year": 2019
+  },
+  {
+    "country_en": "Guatemala",
+    "pm25": 14.0,
+    "year": 2019
+  },
+  {
+    "country_en": "Honduras",
+    "pm25": 36.0,
+    "year": 2013
+  },
+  {
+    "country_en": "Hungary",
+    "pm25": 11.45,
+    "year": 2019
+  },
+  {
+    "country_en": "Iceland",
+    "pm25": 4.55,
+    "year": 2019
+  },
+  {
+    "country_en": "India",
+    "pm25": 45.0,
+    "year": 2019
+  },
+  {
+    "country_en": "Indonesia",
+    "pm25": 46.35,
+    "year": 2019
+  },
+  {
+    "country_en": "Iran (Islamic Republic of)",
+    "pm25": 28.66,
+    "year": 2020
+  },
+  {
+    "country_en": "Iraq",
+    "pm25": 45.0,
+    "year": 2019
+  },
+  {
+    "country_en": "Ireland",
+    "pm25": 7.6,
+    "year": 2019
+  },
+  {
+    "country_en": "Israel",
+    "pm25": 22.77,
+    "year": 2015
+  },
+  {
+    "country_en": "Italy",
+    "pm25": 17.14,
+    "year": 2019
+  },
+  {
+    "country_en": "Japan",
+    "pm25": 13.6,
+    "year": 2018
+  },
+  {
+    "country_en": "Jordan",
+    "pm25": 26.83,
+    "year": 2019
+  },
+  {
+    "country_en": "Kazakhstan",
+    "pm25": 21.77,
+    "year": 2019
+  },
+  {
+    "country_en": "Kenya",
+    "pm25": 10.79,
+    "year": 2019
+  },
+  {
+    "country_en": "Kuwait",
+    "pm25": 41.15,
+    "year": 2020
+  },
+  {
+    "country_en": "Kyrgyzstan",
+    "pm25": 33.15,
+    "year": 2019
+  },
+  {
+    "country_en": "Lao People's Democratic Republic",
+    "pm25": 25.77,
+    "year": 2019
+  },
+  {
+    "country_en": "Latvia",
+    "pm25": 13.38,
+    "year": 2019
+  },
+  {
+    "country_en": "Lebanon",
+    "pm25": 19.0,
+    "year": 2016
+  },
+  {
+    "country_en": "Lithuania",
+    "pm25": 11.37,
+    "year": 2019
+  },
+  {
+    "country_en": "Luxembourg",
+    "pm25": 6.89,
+    "year": 2019
+  },
+  {
+    "country_en": "Madagascar",
+    "pm25": 32.0,
+    "year": 2020
+  },
+  {
+    "country_en": "Malaysia",
+    "pm25": 20.97,
+    "year": 2019
+  },
+  {
+    "country_en": "Malta",
+    "pm25": 12.12,
+    "year": 2019
+  },
+  {
+    "country_en": "Mexico",
+    "pm25": 15.0,
+    "year": 2018
+  },
+  {
+    "country_en": "Mongolia",
+    "pm25": 60.0,
+    "year": 2019
+  },
+  {
+    "country_en": "Myanmar",
+    "pm25": 18.08,
+    "year": 2019
+  },
+  {
+    "country_en": "Nepal",
+    "pm25": 37.03,
+    "year": 2020
+  },
+  {
+    "country_en": "Netherlands",
+    "pm25": 11.15,
+    "year": 2019
+  },
+  {
+    "country_en": "New Zealand",
+    "pm25": 11.23,
+    "year": 2017
+  },
+  {
+    "country_en": "Nigeria",
+    "pm25": 27.43,
+    "year": 2010
+  },
+  {
+    "country_en": "North Macedonia",
+    "pm25": 43.48,
+    "year": 2017
+  },
+  {
+    "country_en": "Norway",
+    "pm25": 8.23,
+    "year": 2019
+  },
+  {
+    "country_en": "Pakistan",
+    "pm25": 32.29,
+    "year": 2020
+  },
+  {
+    "country_en": "Panama",
+    "pm25": 14.0,
+    "year": 2013
+  },
+  {
+    "country_en": "Paraguay",
+    "pm25": 18.4,
+    "year": 2010
+  },
+  {
+    "country_en": "Peru",
+    "pm25": 30.14,
+    "year": 2019
+  },
+  {
+    "country_en": "Philippines",
+    "pm25": 14.0,
+    "year": 2018
+  },
+  {
+    "country_en": "Poland",
+    "pm25": 19.87,
+    "year": 2019
+  },
+  {
+    "country_en": "Portugal",
+    "pm25": 8.12,
+    "year": 2019
+  },
+  {
+    "country_en": "Qatar",
+    "pm25": 38.0,
+    "year": 2021
+  },
+  {
+    "country_en": "Republic of Korea",
+    "pm25": 17.0,
+    "year": 2020
+  },
+  {
+    "country_en": "Romania",
+    "pm25": 13.36,
+    "year": 2019
+  },
+  {
+    "country_en": "Russian Federation",
+    "pm25": 14.0,
+    "year": 2016
+  },
+  {
+    "country_en": "Saudi Arabia",
+    "pm25": 34.12,
+    "year": 2019
+  },
+  {
+    "country_en": "Senegal",
+    "pm25": 42.0,
+    "year": 2018
+  },
+  {
+    "country_en": "Serbia",
+    "pm25": 22.67,
+    "year": 2016
+  },
+  {
+    "country_en": "Singapore",
+    "pm25": 11.0,
+    "year": 2020
+  },
+  {
+    "country_en": "Slovakia",
+    "pm25": 13.92,
+    "year": 2019
+  },
+  {
+    "country_en": "Slovenia",
+    "pm25": 16.22,
+    "year": 2019
+  },
+  {
+    "country_en": "South Africa",
+    "pm25": 12.63,
+    "year": 2021
+  },
+  {
+    "country_en": "Spain",
+    "pm25": 13.6,
+    "year": 2019
+  },
+  {
+    "country_en": "Sri Lanka",
+    "pm25": 23.58,
+    "year": 2019
+  },
+  {
+    "country_en": "Sweden",
+    "pm25": 6.75,
+    "year": 2019
+  },
+  {
+    "country_en": "Switzerland",
+    "pm25": 8.9,
+    "year": 2020
+  },
+  {
+    "country_en": "Tajikistan",
+    "pm25": 71.52,
+    "year": 2019
+  },
+  {
+    "country_en": "Thailand",
+    "pm25": 23.14,
+    "year": 2019
+  },
+  {
+    "country_en": "Trinidad and Tobago",
+    "pm25": 11.9,
+    "year": 2019
+  },
+  {
+    "country_en": "Turkey",
+    "pm25": 14.25,
+    "year": 2019
+  },
+  {
+    "country_en": "Turkmenistan",
+    "pm25": 22.08,
+    "year": 2019
+  },
+  {
+    "country_en": "Uganda",
+    "pm25": 60.15,
+    "year": 2019
+  },
+  {
+    "country_en": "Ukraine",
+    "pm25": 23.36,
+    "year": 2019
+  },
+  {
+    "country_en": "United Arab Emirates",
+    "pm25": 44.4,
+    "year": 2019
+  },
+  {
+    "country_en": "United Kingdom",
+    "pm25": 7.26,
+    "year": 2019
+  },
+  {
+    "country_en": "United Republic of Tanzania",
+    "pm25": 23.32,
+    "year": 2011
+  },
+  {
+    "country_en": "United States of America",
+    "pm25": 7.35,
+    "year": 2019
+  },
+  {
+    "country_en": "Uruguay",
+    "pm25": 12.0,
+    "year": 2018
+  },
+  {
+    "country_en": "Uzbekistan",
+    "pm25": 41.96,
+    "year": 2019
+  },
+  {
+    "country_en": "Venezuela (Bolivarian Republic of)",
+    "pm25": 35.0,
+    "year": 2011
+  },
+  {
+    "country_en": "Viet Nam",
+    "pm25": 52.09,
+    "year": 2019
+  }
+]
