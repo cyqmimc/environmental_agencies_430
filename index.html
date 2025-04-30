@@ -90,8 +90,7 @@
         <span v-else class="text-gray-500">暂无</span>
       </p>
       <p><strong>PM2.5：</strong>{{ selected.pm25 ?? '暂无数据' }} μg/m³</p>
-      $1
-      <p><strong>官方语言：</strong>{{ selected.official_language ?? '暂无数据' }}</p>
+      <p><strong>官方语言：</strong>{{ selected.language }}</p>
 
         <button @click="showModal = false" class="px-4 py-1 bg-gray-200 rounded hover:bg-gray-300">关闭</button>
       </div>
