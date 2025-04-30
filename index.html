@@ -10,6 +10,8 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="bg-gray-50">
 
@@ -26,64 +28,35 @@
     </select>
     <button @click="clearFilters" class="border p-2 rounded bg-gray-200 hover:bg-gray-300 w-full md:w-auto">清空</button>
     <button @click="exportToExcel" class="border p-2 rounded bg-green-100 hover:bg-green-200 w-full md:w-auto">导出当前页</button>
+    <button @click="exportMapAsImage" class="border p-2 rounded bg-blue-100 hover:bg-blue-200 w-full md:w-auto">导出地图图像</button>
+    <button @click="exportMapAsPDF" class="border p-2 rounded bg-red-100 hover:bg-red-200 w-full md:w-auto">导出地图为PDF</button>
   </div>
 
   <div id="world-map" class="w-full h-96 my-8 rounded shadow"></div>
 
-  <div v-if="paginatedCountries.length" class="overflow-x-auto bg-white rounded shadow">
-    <table class="min-w-full text-left">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-3 cursor-pointer" @click="sortBy('country_en')">国家 / 地区 <span v-if="sortKey==='country_en'">{{ sortAsc ? '↑' : '↓' }}</span></th>
-          <th class="p-3">环保部门</th>
-          <th class="p-3">官网访问</th>
-          <th class="p-3 cursor-pointer" @click="sortBy('pm25')">PM2.5 (μg/m³) <span v-if="sortKey==='pm25'">{{ sortAsc ? '↑' : '↓' }}</span></th>
-          <th class="p-3">年份</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in paginatedCountries" :key="item.country_en" class="border-t hover:bg-gray-50 cursor-pointer" @click="selectCountry(item)">
-          <td class="p-3 flex items-center gap-2">
-            <img v-if="item.country_code" :src="'https://flagcdn.com/w40/' + item.country_code + '.png'" alt="Flag" class="w-6 h-4 object-cover rounded">
-            {{ item.country_cn }} ({{ item.country_en }})
-          </td>
-          <td class="p-3">{{ item.agency_cn }} ({{ item.agency_en }})</td>
-          <td class="p-3">
-            <a v-if="item.has_official_website === '是'" :href="item.website" target="_blank" class="text-green-600 hover:underline">访问官网</a>
-            <span v-else class="text-gray-400">暂无官网</span>
-          </td>
-          <td class="p-3">
-            <span v-if="item.pm25 !== null">{{ item.pm25 }}</span>
-            <span v-else class="text-gray-400">暂无数据</span>
-          </td>
-          <td class="p-3">
-            <span v-if="item.pm25_year !== null">{{ item.pm25_year }}</span>
-            <span v-else class="text-gray-400">暂无数据</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="flex flex-wrap justify-between items-center p-4 text-sm">
-    <div>
-      第 {{ currentPage }} 页，共 {{ totalPages }} 页
-    </div>
-    <div class="flex gap-2 items-center">
-      <button @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage === 1" class="px-3 py-1 border rounded hover:bg-gray-100">上一页</button>
-      <template v-for="page in totalPages">
-        <button v-if="Math.abs(page - currentPage) <= 2 || page === 1 || page === totalPages"
-                @click="currentPage = page"
-                :class="['px-3 py-1 border rounded', page === currentPage ? 'bg-green-500 text-white' : 'hover:bg-gray-100']">
-          {{ page }}
-        </button>
-      </template>
-      <button @click="currentPage = Math.min(totalPages, currentPage + 1)" :disabled="currentPage === totalPages" class="px-3 py-1 border rounded hover:bg-gray-100">下一页</button>
+  <!-- 国家详情弹窗 -->
+  <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded p-6 max-w-md w-full shadow-lg">
+      <h2 class="text-xl font-bold mb-4">{{ selected.country_cn }} ({{ selected.country_en }})</h2>
+      <p><strong>环保部门：</strong>{{ selected.agency_cn }} ({{ selected.agency_en }})</p>
+      <p><strong>官网：</strong>
+        <a v-if="selected.has_official_website === '是'" :href="selected.website" target="_blank" class="text-green-600 underline">
+          {{ selected.website }}
+        </a>
+        <span v-else class="text-gray-500">暂无</span>
+      </p>
+      <p><strong>PM2.5：</strong>{{ selected.pm25 ?? '暂无数据' }} μg/m³</p>
+      <p><strong>年份：</strong>{{ selected.pm25_year ?? '暂无数据' }}</p>
+      <div class="text-right mt-4">
+        <button @click="showModal = false" class="px-4 py-1 bg-gray-200 rounded hover:bg-gray-300">关闭</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 const { createApp } = Vue;
+const { jsPDF } = window.jspdf;
 
 createApp({
   data() {
@@ -94,11 +67,6 @@ createApp({
       regions: [],
       showModal: false,
       selected: {},
-      currentPage: 1,
-      pageSize: 50,
-      jumpPage: '',
-      sortKey: '',
-      sortAsc: true,
       latestUpdateYear: ''
     }
   },
@@ -110,42 +78,16 @@ createApp({
           .some(field => field && field.toLowerCase().includes(keyword));
       });
       if (this.regionFilter) result = result.filter(item => item.region === this.regionFilter);
-      if (this.sortKey) {
-        result = result.sort((a, b) => {
-          const aValue = a[this.sortKey] || 0;
-          const bValue = b[this.sortKey] || 0;
-          return this.sortAsc ? (aValue > bValue ? 1 : -1) : (aValue < bValue ? 1 : -1);
-        });
-      }
       return result;
-    },
-    paginatedCountries() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      return this.filteredCountries.slice(start, start + this.pageSize);
-    },
-    totalPages() {
-      return Math.ceil(this.filteredCountries.length / this.pageSize) || 1;
     }
   },
   methods: {
-    sortBy(key) {
-      this.sortAsc = this.sortKey === key ? !this.sortAsc : true;
-      this.sortKey = key;
-    },
-    selectCountry(item) {
-      this.selected = item;
-    },
     clearFilters() {
       this.search = '';
       this.regionFilter = '';
-      this.currentPage = 1;
-    },
-    goToPage() {
-      const page = Number(this.jumpPage);
-      if (page >= 1 && page <= this.totalPages) this.currentPage = page;
     },
     exportToExcel() {
-      const data = this.paginatedCountries.map(item => ({
+      const data = this.filteredCountries.map(item => ({
         国家中文: item.country_cn,
         Country: item.country_en,
         环保部门: item.agency_cn + ' (' + item.agency_en + ')',
@@ -156,7 +98,26 @@ createApp({
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, '当前页数据');
-      XLSX.writeFile(wb, 'environmental_agencies_page_' + this.currentPage + '.xlsx');
+      XLSX.writeFile(wb, 'environmental_agencies_filtered.xlsx');
+    },
+    exportMapAsImage() {
+      const chartDom = document.getElementById('world-map');
+      const chart = echarts.getInstanceByDom(chartDom);
+      const url = chart.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: '#fff' });
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'pm25_world_map.png';
+      link.click();
+    },
+    exportMapAsPDF() {
+      html2canvas(document.getElementById('world-map')).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({ orientation: 'landscape' });
+        const width = pdf.internal.pageSize.getWidth();
+        const height = (canvas.height * width) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 10, width, height);
+        pdf.save('pm25_world_map.pdf');
+      });
     },
     initMap() {
       const chart = echarts.init(document.getElementById('world-map'));
@@ -171,10 +132,14 @@ createApp({
           text: ['高浓度', '低浓度'],
           realtime: true,
           calculable: true,
-          orient: 'horizontal',
-          left: 'center',
-          bottom: 20,
-          inRange: { color: ['#e0f3db', '#a8ddb5', '#43a2ca', '#0868ac', '#084081'] }
+          orient: 'vertical',
+          right: 20,
+          top: 'middle',
+          itemHeight: 150,
+          itemWidth: 10,
+          inRange: {
+            color: ['#e0f3db', '#a8ddb5', '#43a2ca', '#0868ac', '#084081']
+          }
         },
         series: [{
           type: 'map',
@@ -183,27 +148,68 @@ createApp({
           animation: true,
           animationDuration: 1500,
           animationEasing: 'cubicOut',
-          data: mapData,
-          label: { show: true, fontSize: 9, color: '#333' },
-          itemStyle: { areaColor: '#e0e0e0', borderColor: '#666', borderWidth: 1 },
+          zoom: 1,
+          label: {
+            show: true,
+            fontSize: 9,
+            color: '#333',
+            formatter: function (params) {
+              const keyCountries = ['China', 'India', 'United States', 'Russia', 'Brazil', 'Indonesia', 'Pakistan', 'Nigeria', 'Bangladesh', 'Mexico'];
+              return keyCountries.includes(params.name) ? params.name : '';
+            }
+          },
+          itemStyle: {
+            areaColor: '#e0e0e0',
+            borderColor: '#666',
+            borderWidth: 1
+          },
           emphasis: {
-            label: { show: true },
-            itemStyle: { areaColor: '#66bb6a', shadowBlur: 20, shadowColor: 'rgba(0,0,0,0.5)', borderColor: '#66bb6a', borderWidth: 2 }
-          }
+            label: {
+              show: true,
+              fontSize: 12,
+              color: '#000'
+            },
+            itemStyle: {
+              areaColor: '#66bb6a',
+              shadowBlur: 30,
+              shadowColor: 'rgba(0,0,0,0.5)',
+              borderColor: '#004d00',
+              borderWidth: 2
+            }
+          },
+          data: mapData
         }]
       });
 
       chart.on('click', params => {
-        const link = countryLinkMap[params.name.toLowerCase()];
-        if (link) {
-          const seriesOption = chart.getOption().series[0];
-          const currentZoom = seriesOption.zoom || 1;
-          chart.dispatchAction({ type: 'geoRoam', zoom: currentZoom * 1.8, moveX: 20, moveY: 20 });
-          setTimeout(() => { window.open(link, '_blank'); }, 800);
+        const country = this.countries.find(c => c.country_en === params.name);
+        if (country) {
+          this.selected = country;
+          this.showModal = true;
         }
       });
 
-      window.addEventListener('resize', () => { chart.resize(); });
+      chart.on('georoam', () => {
+        const zoom = chart.getOption().series[0].zoom || 1;
+        const dynamicLabels = zoom > 2;
+        chart.setOption({
+          series: [{
+            label: {
+              show: true,
+              fontSize: 9,
+              color: '#333',
+              formatter: function (p) {
+                if (!dynamicLabels) {
+                  return ['China', 'India', 'United States'].includes(p.name) ? p.name : '';
+                }
+                return p.name;
+              }
+            }
+          }]
+        });
+      });
+
+      window.addEventListener('resize', () => chart.resize());
     }
   },
   mounted() {
@@ -214,11 +220,17 @@ createApp({
       const pm25Map = Object.fromEntries(pm25Res.data.map(pm => [pm.country_en.toLowerCase(), pm]));
       this.countries = agencyRes.data.map(item => {
         const pm25Data = pm25Map[item.country_en.toLowerCase()];
-        return { ...item, pm25: pm25Data?.pm25 ?? null, pm25_year: pm25Data?.year ?? null };
+        return {
+          ...item,
+          pm25: pm25Data?.pm25 ?? null,
+          pm25_year: pm25Data?.year ?? null
+        };
       });
       this.regions = [...new Set(this.countries.map(item => item.region))];
-      if (pm25Res.data.length > 0) this.latestUpdateYear = Math.max(...pm25Res.data.map(p => p.year || 0)) + '年';
-      this.$nextTick(() => { this.initMap(); });
+      if (pm25Res.data.length > 0) {
+        this.latestUpdateYear = Math.max(...pm25Res.data.map(p => p.year || 0)) + '年';
+      }
+      this.$nextTick(() => this.initMap());
     });
   }
 }).mount('#app');
@@ -226,4 +238,3 @@ createApp({
 
 </body>
 </html>
-
