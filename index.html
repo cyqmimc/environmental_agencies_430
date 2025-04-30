@@ -18,6 +18,7 @@
 <div id="app" class="max-w-7xl mx-auto p-4">
   <div class="text-right text-sm text-gray-500 mb-2">数据更新时间：{{ latestUpdateYear }}</div>
   <h1 class="text-3xl font-bold mb-2">Global Environmental Agencies</h1>
+  <p class="text-gray-600 mb-4">当前显示 {{ filteredCountries.length }} / {{ countries.length }} 个国家和地区<br>数据来源：<a href="https://www.who.int/data/gho/data/themes/air-pollution" target="_blank" class="text-blue-600 underline">WHO GHO Air Pollution</a> 和各国环保官网</p>
 
   <div class="flex flex-wrap gap-4 mb-6">
   <input v-model="search" type="text" placeholder="搜索国家或环保部门..." class="border p-2 rounded w-full md:w-1/2">
