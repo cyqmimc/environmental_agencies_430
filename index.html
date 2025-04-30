@@ -255,12 +255,15 @@ createApp({
         }]
       });
 
-      chart.on('click', params => {
+       chart.on('click', params => {
         const country = this.countries.find(c => c.country_en === params.name);
-        if (country) {
+        if (country && country.has_official_website === '是' && country.website) {
+          window.open(country.website, '_blank');
+        } else if (country) {
           this.selectCountry(country);
         }
       });
+
 
       chart.on('georoam', () => {
         const zoom = chart.getOption().series[0].zoom || 1;
