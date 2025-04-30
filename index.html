@@ -50,7 +50,6 @@
   <img v-if="item.country_code" :src="'https://flagcdn.com/w40/' + item.country_code.toLowerCase() + '.png'" alt="Flag" class="w-6 h-4 object-cover rounded">
   {{ item.country_cn }} ({{ item.country_en }})
 </td>
-
           <td class="p-3">{{ item.agency_cn }} ({{ item.agency_en }})</td>
           <td class="p-3">
             <a v-if="item.has_official_website === '是'" :href="item.website" target="_blank" class="text-green-600 hover:underline">访问</a>
@@ -91,8 +90,9 @@
         <span v-else class="text-gray-500">暂无</span>
       </p>
       <p><strong>PM2.5：</strong>{{ selected.pm25 ?? '暂无数据' }} μg/m³</p>
-      <p><strong>年份：</strong>{{ selected.pm25_year ?? '暂无数据' }}</p>
-      <div class="text-right mt-4">
+      $1
+      <p><strong>官方语言：</strong>{{ selected.official_language ?? '暂无数据' }}</p>
+
         <button @click="showModal = false" class="px-4 py-1 bg-gray-200 rounded hover:bg-gray-300">关闭</button>
       </div>
     </div>
