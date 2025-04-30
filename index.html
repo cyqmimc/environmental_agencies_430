@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <body class="bg-gray-50">
 
@@ -24,6 +25,7 @@
       <option v-for="r in regions" :key="r" :value="r">{{ r }}</option>
     </select>
     <button @click="clearFilters" class="border p-2 rounded bg-gray-200 hover:bg-gray-300 w-full md:w-auto">清空</button>
+    <button @click="exportToExcel" class="border p-2 rounded bg-green-100 hover:bg-green-200 w-full md:w-auto">导出当前页</button>
   </div>
 
   <div id="world-map" class="w-full h-96 my-8 rounded shadow"></div>
@@ -62,6 +64,23 @@
       </tbody>
     </table>
   </div>
+  <div class="flex flex-wrap justify-between items-center p-4 text-sm">
+  <div>
+    第 {{ currentPage }} 页，共 {{ totalPages }} 页
+  </div>
+  <div class="flex gap-2 items-center">
+    <button @click="currentPage = Math.max(1, currentPage - 1)" :disabled="currentPage === 1" class="px-3 py-1 border rounded hover:bg-gray-100">上一页</button>
+    <template v-for="page in totalPages">
+      <button v-if="Math.abs(page - currentPage) <= 2 || page === 1 || page === totalPages"
+              @click="currentPage = page"
+              :class="['px-3 py-1 border rounded', page === currentPage ? 'bg-green-500 text-white' : 'hover:bg-gray-100']">
+        {{ page }}
+      </button>
+    </template>
+    <button @click="currentPage = Math.min(totalPages, currentPage + 1)" :disabled="currentPage === totalPages" class="px-3 py-1 border rounded hover:bg-gray-100">下一页</button>
+  </div>
+</div>
+
 </div>
 
 <script>
@@ -174,6 +193,20 @@ createApp({
       window.addEventListener('resize', () => { chart.resize(); });
     }
   },
+  exportToExcel() {
+  const data = this.paginatedCountries.map(item => ({
+    国家中文: item.country_cn,
+    Country: item.country_en,
+    环保部门: item.agency_cn + ' (' + item.agency_en + ')',
+    官网: item.has_official_website === '是' ? item.website : '暂无官网',
+    PM2_5: item.pm25 ?? '暂无数据',
+    年份: item.pm25_year ?? '暂无数据'
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '当前页数据');
+  XLSX.writeFile(wb, 'environmental_agencies_page_' + this.currentPage + '.xlsx');
+}，
   mounted() {
     Promise.all([
       axios.get('global_environmental_agencies_final_with_language.json'),
